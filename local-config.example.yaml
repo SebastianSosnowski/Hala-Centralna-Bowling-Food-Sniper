@@ -1,0 +1,15 @@
+monitor:
+  checks:
+    - date: "2026-11-10"
+      times: ["15:00", "18:00"] # Empty list means every time on this date.
+    - date: "2026-11-11"
+      times: []
+  interval_seconds: 300
+
+notifications:
+  providers:
+    - console
+    # - pushbullet
+  pushbullet:
+    access_token: "" # Set here or via PUSHBULLET_ACCESS_TOKEN.
+    title: "Wolny termin na kręgielni"
