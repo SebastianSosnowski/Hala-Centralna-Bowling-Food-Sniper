@@ -7,7 +7,6 @@ import time
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlencode
 
 import requests
 import yaml
@@ -17,6 +16,7 @@ from pushbullet.errors import PushbulletError
 LOGGER = logging.getLogger("hcbowlingfoodsniper")
 DEFAULT_CONFIG = "local-config.yaml"
 BOOKING_URL = "https://kregielnia24.pl/rezerwacja"
+BOOKING_PAGE_URL = "https://kregielnia24.pl/rezerwuj/423/hala-centralna-bowling-food"
 BOOKING_ID = 423
 BOOKING_SEONAME = "bowling"
 BOOKING_PHONE = "608 466 541"
@@ -101,14 +101,8 @@ def load_config(path: str | Path) -> dict[str, Any]:
     return config
 
 
-def booking_url(day: datetime.date) -> str:
-    return f"{BOOKING_URL}?{urlencode({
-        'id': BOOKING_ID,
-        'seoname': BOOKING_SEONAME,
-        'day': day.day,
-        'month': day.month,
-        'year': day.year,
-    })}"
+def booking_url() -> str:
+    return BOOKING_PAGE_URL
 
 
 def fetch_available_slots(
@@ -196,7 +190,7 @@ def format_notification(slots: list[tuple[datetime.date, str, str]]) -> str:
         for slot_time in sorted(grouped[day]):
             lanes = ", ".join(sorted(grouped[day][slot_time]))
             lines.append(f"  {slot_time} — tory: {lanes}")
-        lines.append(f"  Rezerwacja: {booking_url(day)}")
+        lines.append(f"  Rezerwacja: {booking_url()}")
     lines.extend(["", f"Telefon do kręgielni: {BOOKING_PHONE}"])
     return "\n".join(lines)
 
